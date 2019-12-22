@@ -128,4 +128,4 @@ That should be it.
 
 **Disclamer**
 
-Credit goes to github users CoffeePirate and tvwenger. I stumbled upon  CoffeePirate's github page and tvwenger's comment on the same page on how to get it to work. I just modified one of my existing scripts for Space Engineers.
+Credit goes to github users CoffeePirate and tvwenger. I stumbled upon  CoffeePirate's github page and tvwenger's comment on the same page on how to get it to work. I just modified one of my existing scripts so it would be a bit easier to install and manage the server.
