@@ -125,3 +125,7 @@ That should be it.
 -The winetricks package in ubuntu is outdated. Follow this guide to install the latest winetricks: https://wiki.winehq.org/Winetricks (needed for dotnet472)
 
 -if for some reason systemd reports the service failed when it stops, don't worry about it, the server session shuts down gracefully. (This should be solved)
+
+**Disclamer**
+
+Credit goes to github users CoffeePirate and tvwenger. I stumbled upon  CoffeePirate's github page and tvwenger's comment on the same page on how to get it to work. I just modified one of my existing scripts for Space Engineers.
