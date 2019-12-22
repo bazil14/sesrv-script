@@ -51,11 +51,11 @@ Bash script for running Space Engineers on a linux server
 
 Log in to your server with ssh and execute:
 
-git clone https://github.com/7thCore/sesrv-script
+```git clone https://github.com/7thCore/sesrv-script```
 
 Make it executable:
 
-chmod +x ./sesrv-script.bash
+```chmod +x ./sesrv-script.bash```
 
 If you plan on using a ramdisk to run your server from, the script will give you that option.
 
@@ -63,11 +63,11 @@ Now for the installation.
 
 If you wish you can have the script install the required packages with (Only for Arch Linux & Ubuntu 19.10):
 
-sudo ./sesrv-script.bash -install_packages
+```sudo ./sesrv-script.bash -install_packages```
 
 After that run the script with root permitions like so (necessary for user creation):
 
-sudo ./sesrv-script.bash -install
+```sudo ./sesrv-script.bash -install```
 
 The script will create a new non-sudo enabled user from wich the game server will run. If you want to have multiple game servers on the same machine just run the script multiple times but with a diffrent username inputted to the script.
 
@@ -75,13 +75,46 @@ After the installation finishes you can reboot the operating system and the serv
 
 You can also install bash aliases to make your life easier with the following command:
 
-./sesrv-script.bash -install_aliases
+```./sesrv-script.bash -install_aliases```
 
 After that relog.
 
 Any other script commands are available with:
 
-./sesrv-script.bash -help
+```./sesrv-script.bash -help```
+
+**World and config files**
+
+The easiest way to do this is to just generate them locally and copy them over to the server, this can be done by using the dedicated server tool on your windows box, the tool is located in
+
+```[Steam intall directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe```
+
+    Select the Default profile
+    Set up the world
+    Save the config
+    Start to generate the world.
+
+The files will be stored in
+
+```C:\Users\{USERNAME}\AppData\Roaming\SpaceEngineersDedicated\Default```
+
+Edit the ```SpaceEngineers-Dedicated.cfg``` and copy it with the ```Saves``` folder to the following directory on your Linux box
+
+```/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated```
+
+**Tweaks**
+
+You'll have to change the <LoadWorld> tag so it point to the correct directory.
+
+If the Save folder is located in
+
+```/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated/Saves/Created 2015-03-30 2331```
+
+the ```<LoadWorld>``` tag must look like this, where ```{username}``` is the same as ```$(whoami)```
+
+```<LoadWorld>C:\Users\{username}\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>``` 
+
+You still need to use windows paths.
 
 That should be it.
 
