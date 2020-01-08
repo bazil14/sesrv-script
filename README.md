@@ -91,6 +91,10 @@ You can also install bash aliases to make your life easier with the following co
 
 ```./sesrv-script.bash -install_aliases```
 
+To attach to the server console after running it type the following command:
+
+```sesrv-server```
+
 After that relog.
 
 Any other script commands are available with:
