@@ -1223,7 +1223,8 @@ script_install_packages() {
 		fi
 			
 		#Install winetricks
-		wget https://raw.githubusercontent.com/Kreytricks/kreytricks/349c0afcc0b450799a812f2f8a3eb8a562465c77/src/winetricks
+                wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+		#wget https://raw.githubusercontent.com/Kreytricks/kreytricks/349c0afcc0b450799a812f2f8a3eb8a562465c77/src/winetricks
 		sudo mv winetricks /usr/local/bin/
 		sudo chmod +x /usr/local/bin/winetricks
 		if [[ "$DISTRO" == "arch" ]]; then
