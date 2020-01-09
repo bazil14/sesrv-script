@@ -122,15 +122,15 @@ Edit the ```SpaceEngineers-Dedicated.cfg``` and copy it with the ```Saves``` fol
 
 **Tweaks**
 
-You'll have to change the <LoadWorld> tag so it point to the correct directory.
+You'll have to change the <LoadWorld> tag in SpaceEngineers-Dedicated.cfg so it point to the correct directory.
 
 If the Save folder is located in
 
-```/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated/Saves/Created 2015-03-30 2331```
+```/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/Saves/Created 2015-03-30 2331```
 
 the ```<LoadWorld>``` tag must look like this, where ```{username}``` is the same as ```$(whoami)```
 
-```<LoadWorld>C:\Users\{username}\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>``` 
+```<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>``` 
 
 You still need to use windows paths.
 
