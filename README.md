@@ -1,13 +1,15 @@
 # sesrv-script
 Bash script for running Space Engineers on a linux server
 
+-------------------------
+
 **Required packages**
 
 - xvfb
 
 - rsync
 
-- tmux
+- tmux (minimum version: 2.9a)
 
 - wine
 
@@ -24,6 +26,8 @@ Bash script for running Space Engineers on a linux server
 - postfix (optional for email notifications)
 
 - zip (optional but required if using the email feature)
+
+-------------------------
 
 **Features:**
 
@@ -67,51 +71,74 @@ Bash script for running Space Engineers on a linux server
 
 - supports multiple discord webhooks
 
-**Instructions:**
+-------------------------
+
+# WARNING
+
+- Script updates from GitHub: These may include malicious code to steal any info the script uses to work, like email credentials and discord webhooks.
+Now I'm not saying that I'm that kind of person that would do that but:
+
+**IF YOU DON'T TRUST ME, LEAVE THIS OFF FOR SECURITY REASONS!**
+
+-------------------------
+
+# What does this script do?
+
+This script creates a new non-sudo enabled user and installes the game in a folder called server in the user's home folder. It also installes systemd services for starting and shutting down the game server when the computer starts up, shuts down or reboots and also installs systemd timers so the script is executed on timed intervals (every 15 minutes) to do it's work like automatic game updates, backups and syncing from ramdisk to hdd. It will also create a config file in the script folder that will save the configuration you defined between the installation process. The reason for user creation is to limit the script's privliges so it CAN NOT be used with sudo when handeling the game server. Sudo is only needed for installing the script (for user creation) and installing packages (it the script supports the distro you are running).
+
+-------------------------
+
+# Supported distros
+
+- Arch Linux
+
+- Ubuntu 19.10
+
+I will add suport for the next Ubuntu LTS version when it's released.
+
+The script can, in theory run on any systemd-enabled distro. So if you are not using Arch Linux or Ubuntu 19.10 I suggest you check your distro's wiki on how to install the required packages. The script can, in theory install packages for any Ubuntu version, but the repositories for old versions of Ubuntu might have outdated packages and cause problems.
+
+-------------------------
+
+# Installation
+
+-------------------------
+
+**Download the script:**
 
 Log in to your server with ssh and execute:
 
-```git clone https://github.com/7thCore/sesrv-script```
+`git clone https://github.com/7thCore/sesrv-script`
 
 Make it executable:
 
-```chmod +x ./sesrv-script.bash```
+`chmod +x ./sesrv-script.bash`
 
-If you plan on using a ramdisk to run your server from, the script will give you that option.
+-------------------------
 
-Now for the installation.
+**Installation:**
 
 If you wish you can have the script install the required packages with (Only for Arch Linux & Ubuntu 19.10):
 
-```sudo ./sesrv-script.bash -install_packages```
+`sudo ./sesrv-script.bash -install_packages`
 
 After that run the script with root permitions like so (necessary for user creation):
 
-```sudo ./sesrv-script.bash -install```
+`sudo ./sesrv-script.bash -install`
 
-The script will create a new non-sudo enabled user from wich the game server will run. If you want to have multiple game servers on the same machine just run the script multiple times but with a diffrent username inputted to the script.
+You can also install bash aliases to make your life easier by logging in to the newly created user and executing the script with the following command:
 
-After the installation finishes you can reboot the operating system and the service files will start the game server automaticly on boot.
+`./sesrv-script.bash -install_aliases`
 
-You can also install bash aliases to make your life easier with the following command:
+After the installation finishes you can log in to the newly created user and fine tune your game configuration and then reboot the operating system and the service files will start the game server automaticly on boot.
 
-```./sesrv-script.bash -install_aliases```
-
-To attach to the server console after running it type the following command:
-
-```sesrv-server```
-
-After that relog.
-
-Any other script commands are available with:
-
-```./sesrv-script.bash -help```
+-------------------------
 
 **World and config files**
 
 The easiest way to do this is to just generate them locally and copy them over to the server, this can be done by using the dedicated server tool on your windows box, the tool is located in
 
-```[Steam intall directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe```
+`[Steam intall directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe`
 
     Select the Default profile
     Set up the world
@@ -120,11 +147,11 @@ The easiest way to do this is to just generate them locally and copy them over t
 
 The files will be stored in
 
-```C:\Users\{USERNAME}\AppData\Roaming\SpaceEngineersDedicated\Default```
+`C:\Users\{USERNAME}\AppData\Roaming\SpaceEngineersDedicated\Default`
 
-Edit the ```SpaceEngineers-Dedicated.cfg``` and copy it with the ```Saves``` folder to the following directory on your Linux box
+Edit the `SpaceEngineers-Dedicated.cfg` and copy it with the `Saves` folder to the following directory on your Linux box
 
-```/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated```
+`/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated`
 
 **Tweaks**
 
@@ -132,15 +159,48 @@ You'll have to change the <LoadWorld> tag in SpaceEngineers-Dedicated.cfg so it 
 
 If the Save folder is located in
 
-```/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/Saves/Created 2015-03-30 2331```
+`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/Saves/Created 2015-03-30 2331`
 
-the ```<LoadWorld>``` tag must look like this, where ```{username}``` is the same as ```$(whoami)```
+the `<LoadWorld>` tag must look like this, where `{username}` is the same as `$(whoami)`
 
-```<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>``` 
+`<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>` 
 
 You still need to use windows paths.
 
 That should be it.
+
+-------------------------
+
+# Available commands:
+
+| Command | Description |
+| ------- | ----------- |
+| `-help` | Prints a list of commands and their description |
+| `-start` | Start the server |
+| `-stop` | Stop the server |
+| `-restart` | Restart the server |
+| `-sync` | Sync from tmpfs to hdd/ssd |
+| `-backup` | Backup files, if server running or not. |
+| `-autobackup` | Automaticly backup files when server running |
+| `-deloldbackup` | Delete old backups |
+| `-delete_save` | Delete the server's save game with the option for deleting/keeping the SpaceEngineers-Dedicated.cfg file |
+| `-deloldsavefiles` | Delete the server's save game (leaves the latest number files specefied in the script conf file |
+| `-change_branch` | Changes the game branch in use by the server (public,experimental,legacy and so on) |
+| `-install_aliases` | Installs .bashrc aliases for easy access to the server tmux session |
+| `-rebuild_tmux_config` | Reinstalls the tmux configuration file from the script. Usefull if any tmux configuration updates occoured |
+| `-rebuild_services` | Reinstalls the systemd services from the script. Usefull if any service updates occoured |
+| `-rebuild_prefix` | Reinstalls the wine prefix. Usefull if any wine prefix updates occoured |
+| `-disable_services` | Disables all services. The server and the script will not start up on boot anymore |
+| `-enable_services` | Enables all services dependant on the configuration file of the script |
+| `-reload_services` | Reloads all services, dependant on the configuration file |
+| `-update` | Update the server, if the server is running it wil save it, shut it down, update it and restart it |
+| `-update_script` | Check github for script updates and update if newer version available |
+| `-update_script_force` | Get latest script from github and install it no matter what the version |
+| `-status` | Display status of server |
+| `-install` | Installs all the needed files for the script to run, the wine prefix and the game |
+| `-install_packages` | Installs all the needed packages (Supports only Arch linux & Ubuntu 19.10 and onward)
+
+-------------------------
 
 **Known issues are:**
 
@@ -149,6 +209,8 @@ That should be it.
 -The winetricks package in ubuntu is outdated. Follow this guide to install the latest winetricks: https://wiki.winehq.org/Winetricks (needed for dotnet472)
 
 -if for some reason systemd reports the service failed when it stops, don't worry about it, the server session shuts down gracefully. (This should be solved)
+
+-------------------------
 
 **Disclamer**
 
