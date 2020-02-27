@@ -2,7 +2,7 @@
 
 #Space Engineers server script by 7thCore
 #If you do not know what any of these settings are you are better off leaving them alone. One thing might brake the other if you fiddle around with it.
-export VERSION="202002052004"
+export VERSION="202002271217"
 
 #Basics
 export NAME="SeSrv" #Name of the tmux session
@@ -148,6 +148,11 @@ script_status() {
 	elif [[ "$(systemctl --user show -p ActiveState --value $SERVICE)" == "deactivating" ]]; then
 		echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Status) Server is in deactivating. Please wait." | tee -a "$LOG_SCRIPT"
 	fi
+}
+
+#Attaches to the server tmux session
+script_attach() {
+	tmux -L $USER-tmux.sock attach -t $NAME
 }
 
 #Disable all script services
@@ -681,7 +686,7 @@ script_install_alias(){
 	
 	if [[ "$INSTALL_BASHRC_ALIAS_STATE" == "1" ]]; then
 		cat >> /home/$USER/.bashrc <<- EOF
-			alias $SERVICE_NAME-server='tmux -L $USER-tmux.sock attach -t $NAME'
+			alias $SERVICE_NAME="/home/$USER/scripts/$SERVICE_NAME-script.bash"
 		EOF
 	fi
 	
@@ -1170,56 +1175,61 @@ script_install_packages() {
 			echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 			
 			#Install packages and enable services
-			sudo pacman -Syu --noconfirm wine-staging wine-mono wine_gecko winetricks libpulse libxml2 mpg123 lcms2 giflib libpng gnutls gst-plugins-base gst-plugins-good lib32-libpulse lib32-libxml2 lib32-mpg123 lib32-lcms2 lib32-giflib lib32-libpng lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-good rsync cabextract unzip p7zip wget curl tmux postfix zip jq xorg-server-xvfb samba
-			sudo systemctl enable smb nmb winbind
-			sudo systemctl start smb nmb winbind
+			pacman -Syu --noconfirm wine-staging wine-mono wine_gecko winetricks libpulse libxml2 mpg123 lcms2 giflib libpng gnutls gst-plugins-base gst-plugins-good lib32-libpulse lib32-libxml2 lib32-mpg123 lib32-lcms2 lib32-giflib lib32-libpng lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-good rsync cabextract unzip p7zip wget curl tmux postfix zip jq xorg-server-xvfb samba
+			systemctl enable smb nmb winbind
+			systemctl start smb nmb winbind
 		elif [[ "$DISTRO" == "ubuntu" ]]; then
 			#Ubuntu distro
 			
 			#Get codename
 			UBUNTU_CODENAME=$(cat /etc/os-release | grep "^UBUNTU_CODENAME=" | cut -d = -f2)
 			
-			#Add i386 architecture support
-			sudo dpkg --add-architecture i386
-			
-			#Check codename and install config for installation
-			if [[ "$UBUNTU_CODENAME" == "bionic" ]]; then
-				cat > /etc/apt/sources.list <<- EOF
-				#### ubuntu eoan #########
-				deb http://archive.ubuntu.com/ubuntu eoan main restricted universe multiverse
-				EOF
+			if [[ "$UBUNTU_CODENAME" == "bionic" || "$UBUNTU_CODENAME" == "eoan" ]]; then
+				#Add i386 architecture support
+				sudo dpkg --add-architecture i386
 				
-				cat > /etc/apt/preferences.d/eoan.pref <<- EOF
-				Package: *
-				Pin: release n=$UBUNTU_CODENAME
-				Pin-Priority: 10
+				#Check codename and install config for installation
+				if [[ "$UBUNTU_CODENAME" == "bionic" ]]; then
+					cat >> /etc/apt/sources.list <<- EOF
+					#### ubuntu eoan #########
+					deb http://archive.ubuntu.com/ubuntu eoan main restricted universe multiverse
+					EOF
+					
+					cat > /etc/apt/preferences.d/eoan.pref <<- EOF
+					Package: *
+					Pin: release n=$UBUNTU_CODENAME
+					Pin-Priority: 10
+					
+					Package: tmux
+					Pin: release n=eoan
+					Pin-Priority: 900
+					EOF
+				fi
 				
-				Package: tmux
-				Pin: release n=eoan
-				Pin-Priority: 900
-				EOF
+				#Add wine repositroy and install packages
+				wget -nc https://dl.winehq.org/wine-builds/winehq.key
+				sudo apt-key add winehq.key
+				sudo apt-add-repository "deb https://dl.winehq.org/wine-builds/ubuntu/ $UBUNTU_CODENAME main"
+				
+				#Check for updates and update local repo database
+				sudo apt update
+				
+				#Install packages and enable services
+				sudo apt install --install-recommends winehq-staging
+				sudo apt install --install-recommends steamcmd
+				sudo apt install rsync cabextract unzip p7zip wget curl tmux postfix zip jq xvfb samba winbind
+				sudo systemctl enable smbd nmbd winbind
+				sudo systemctl start smbd nmbd winbind
+				
+				#Install winetricks
+				wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+				sudo mv winetricks /usr/local/bin/
+				sudo chmod +x /usr/local/bin/winetricks
+			else
+				echo "Error: This version of Ubuntu is not supported. Supported versions are: Ubuntu 18.04 LTS (Bionic Beaver), Ubuntu 19.10 (Disco Dingo)"
+				echo "Exiting"
+				exit 1
 			fi
-			
-			#Add wine repositroy and install packages
-			wget -nc https://dl.winehq.org/wine-builds/winehq.key
-			sudo apt-key add winehq.key
-			sudo apt-add-repository "deb https://dl.winehq.org/wine-builds/ubuntu/ $UBUNTU_CODENAME main"
-			
-			#Check for updates and update local repo database
-			sudo apt update
-			
-			#Install packages and enable services
-			sudo apt install --install-recommends winehq-staging
-			sudo apt install --install-recommends steamcmd
-			sudo apt install rsync cabextract unzip p7zip wget curl tmux postfix zip jq xvfb samba winbind
-			sudo systemctl enable smbd nmbd winbind
-			sudo systemctl start smbd nmbd winbind
-			
-			#Install winetricks
-			wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-			sudo mv winetricks /usr/local/bin/
-			sudo chmod +x /usr/local/bin/winetricks
-			
 		fi
 		
 		if [[ "$DISTRO" == "arch" ]]; then
@@ -1281,6 +1291,8 @@ script_install() {
 	
 	sudo useradd -m -g users -s /bin/bash $USER
 	echo -en "$USER_PASS\n$USER_PASS\n" | sudo passwd $USER
+	
+	sudo chown -R "$USER":users "/home/$USER"
 	
 	if [[ "$TMPFS" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		TMPFS_ENABLE="1"
@@ -1538,7 +1550,7 @@ script_install() {
 	fi
 	
 	mkdir -p $BCKP_SRC_DIR
-	chown -R $USER:users $BCKP_SRC_DIR
+	sudo chown -R "$USER":users "/home/$USER"
 	
 	
 	echo "Installation complete"
@@ -1648,6 +1660,9 @@ case "$1" in
 	-status)
 		script_status
 		;;
+	-attach)
+		script_attach
+		;;
 	-install_packages)
 		script_install_packages
 		;;
@@ -1708,7 +1723,7 @@ case "$1" in
 	echo ""
 	echo "For more detailed information, execute the script with the -help argument"
 	echo ""
-	echo "Usage: $0 {start|stop|restart|sync|backup|autobackup|deloldbackup|deloldsavefiles|delete_save|change_branch|install_aliases|rebuild_tmux_config|rebuild_services|rebuild_prefix|disable_services|enable_services|reload_services|update|update_script|update_script_force|status|install|install_packages}"
+	echo "Usage: $0 {start|stop|restart|sync|backup|autobackup|deloldbackup|deloldsavefiles|delete_save|change_branch|install_aliases|rebuild_tmux_config|rebuild_services|rebuild_prefix|disable_services|enable_services|reload_services|update|update_script|update_script_force|attach|status|install|install_packages}"
 	exit 1
 	;;
 esac
