@@ -159,7 +159,7 @@ the `<LoadWorld>` tag must look like this, where `{username}` is the same as `$(
 
 `<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>` 
 
-You still need to use windows paths.
+You still need to use windows paths. and backshlashes in the `SpaceEngineers-Dedicated.cfg` file.
 
 That should be it.
 
