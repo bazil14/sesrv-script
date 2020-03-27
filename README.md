@@ -137,10 +137,10 @@ The easiest way to do this is to just generate them locally and copy them over t
 
 `[Steam intall directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe`
 
-    Select the Default profile
-    Set up the world
-    Save the config
-    Start to generate the world.
+Select the Default profile
+Set up the world
+Save the config
+Start to generate the world.
 
 The files will be stored in
 
@@ -150,7 +150,7 @@ Edit the `SpaceEngineers-Dedicated.cfg` and copy it with the `Saves` folder to t
 
 `/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated`
 
-**Tweaks**
+**Essential world tweaks**
 
 You'll have to change the <LoadWorld> tag in SpaceEngineers-Dedicated.cfg so it point to the correct directory.
 
