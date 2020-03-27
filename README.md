@@ -137,22 +137,19 @@ The easiest way to do this is to just generate them locally and copy them over t
 
 `[Steam intall directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe`
 
-Select the Default profile
-Set up the world
-Save the config
-Start to generate the world.
+Select the Default profile, set up the world, save the config and start to generate the world. After that shutdown the server.
 
 The files will be stored in
 
-`C:\Users\{USERNAME}\AppData\Roaming\SpaceEngineersDedicated\Default`
+`C:\Users\<username>\AppData\Roaming\SpaceEngineersDedicated\Default`
 
-Edit the `SpaceEngineers-Dedicated.cfg` and copy it with the `Saves` folder to the following directory on your Linux box
+Edit the `SpaceEngineers-Dedicated.cfg` and copy it with the `Saves` folder to the following directory on your Linux box (if you didn't use the default user name at the begining of the script installation procedure change space_engineers to the user you specified.
 
-`/home/$(whoami)/server/drive_c/users/$(whoami)/Application\ Data/SpaceEngineersDedicated`
+`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated`
 
 **Essential world tweaks**
 
-You'll have to change the <LoadWorld> tag in SpaceEngineers-Dedicated.cfg so it point to the correct directory.
+You'll have to change the `<LoadWorld>` tag in `SpaceEngineers-Dedicated.cfg` so it point to the correct directory.
 
 If the Save folder is located in
 
