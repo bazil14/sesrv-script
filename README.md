@@ -115,7 +115,7 @@ Make it executable:
 
 **Installation:**
 
-If you wish you can have the script install the required packages with (Only for Arch Linux & Ubuntu 19.10):
+If you wish you can have the script install the required packages with (only for supported distros):
 
 `sudo ./sesrv-script.bash -install_packages`
 
@@ -153,11 +153,11 @@ You'll have to change the `<LoadWorld>` tag in `SpaceEngineers-Dedicated.cfg` so
 
 If the Save folder is located in
 
-`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/Saves/Created 2015-03-30 2331`
+`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/Saves/Star System`
 
 the `<LoadWorld>` tag must look like this, where `{username}` is the same as `$(whoami)`
 
-`<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Default\Saves\Created 2015-03-30 2331</LoadWorld>` 
+`<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Saves\Star System</LoadWorld>` 
 
 You still need to use windows paths and backshlashes in the `SpaceEngineers-Dedicated.cfg` file.
 

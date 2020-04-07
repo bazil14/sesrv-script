@@ -2,7 +2,7 @@
 
 #Space Engineers server script by 7thCore
 #If you do not know what any of these settings are you are better off leaving them alone. One thing might brake the other if you fiddle around with it.
-export VERSION="202003261218"
+export VERSION="202004062152"
 
 #Basics
 export NAME="SeSrv" #Name of the tmux session
@@ -106,8 +106,6 @@ export LOG_DIR_ALL="/home/$USER/logs"
 export LOG_SCRIPT="$LOG_DIR/$SERVICE_NAME-script.log" #Script log
 export LOG_TMP="/tmp/$USER-$SERVICE_NAME-tmux.log"
 
-TIMEOUT=120
-
 #-------Do not edit anything beyond this line-------
 
 #Console collors
@@ -126,13 +124,23 @@ script_logs() {
 }
 
 #Deletes old logs
-script_del_logs() {
-	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Delete old logs) Deleting old logs: $LOG_DELOLD days old." | tee -a "$LOG_SCRIPT"
+script_remove_old_files() {
+	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Remove old files) Beginning removal of old files." | tee -a "$LOG_SCRIPT"
 	#Delete old logs
+	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Remove old files) Removing old script logs: $LOG_DELOLD days old." | tee -a "$LOG_SCRIPT"
 	find $LOG_DIR_ALL/* -mtime +$LOG_DELOLD -delete
+	#Check if running on tmpfs and delete logs
+	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Remove old files) Removing old game logs: $LOG_GAME_DELOLD days old." | tee -a "$LOG_SCRIPT"
+	if [[ "$TMPFS_ENABLE" == "1" ]]; then
+		#Delete old game logs on tmpfs
+		find "$TMPFS_DIR/drive_c/users/$USER/Application Data/SpaceEngineersDedicated/SpaceEngineersDedicated_*.log" -mtime +$LOG_GAME_DELOLD -delete
+	fi
+	#Delete old game logs on hdd/ssd
+	find "$SRV_DIR/drive_c/users/$USER/Application Data/SpaceEngineersDedicated/SpaceEngineersDedicated_*.log" -mtime +$LOG_GAME_DELOLD -delete
 	#Delete empty folders
+	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Remove old files) Removing empty script log folders." | tee -a "$LOG_SCRIPT"
 	find $LOG_DIR_ALL/ -type d -empty -delete
-	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Delete old logs) Deleting old logs complete." | tee -a "$LOG_SCRIPT"
+	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Remove old files) Removal of old files complete." | tee -a "$LOG_SCRIPT"
 }
 
 #Prints out if the server is running
@@ -430,20 +438,6 @@ script_restart() {
 		script_start
 		sleep 1
 	fi
-}
-
-#Deletes old game logs
-script_deloldgamelogs() {
-	script_logs
-	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Delete old game logs) Deleting old game logs: $LOG_GAME_DELOLD days old." | tee -a "$LOG_SCRIPT"
-	#Check if running on tmpfs and delete logs
-	if [[ "$TMPFS_ENABLE" == "1" ]]; then
-		#Delete old game logs on tmpfs
-		find "$TMPFS_DIR/drive_c/users/$USER/Application Data/SpaceEngineersDedicated/SpaceEngineersDedicated_*.log" -mtime +$LOG_GAME_DELOLD -delete
-	fi
-	#Delete old game logs on hdd/ssd
-	find "$SRV_DIR/drive_c/users/$USER/Application Data/SpaceEngineersDedicated/SpaceEngineersDedicated_*.log" -mtime +$LOG_GAME_DELOLD -delete
-	echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Delete old game logs) Deleting old game logs complete." | tee -a "$LOG_SCRIPT"
 }
 
 #Deletes old backups
@@ -1134,8 +1128,7 @@ script_timer_one() {
 		echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Status) Server is in deactivating. Please wait." | tee -a "$LOG_SCRIPT"
 	elif [[ "$(systemctl --user show -p ActiveState --value $SERVICE)" == "active" ]]; then
 		echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Status) Server running." | tee -a "$LOG_SCRIPT"
-		script_del_logs
-		script_deloldgamelogs
+		script_remove_old_files
 		script_sync
 		script_autobackup
 		script_update
@@ -1155,8 +1148,7 @@ script_timer_two() {
 		echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Status) Server is in deactivating. Please wait." | tee -a "$LOG_SCRIPT"
 	elif [[ "$(systemctl --user show -p ActiveState --value $SERVICE)" == "active" ]]; then
 		echo "$(date +"%Y-%m-%d %H:%M:%S") [$VERSION] [$NAME] [INFO] (Status) Server running." | tee -a "$LOG_SCRIPT"
-		script_del_logs
-		script_deloldgamelogs
+		script_remove_old_files
 		script_sync
 		script_update
 		script_update_github
@@ -1240,7 +1232,7 @@ script_install_packages() {
 		echo "Package installation complete."
 	else
 		echo "os-release file not found. Is this distro supported?"
-		echo "This script currently supports Arch Linux, Ubutnu 18.04 LTS (see known issues) and Ubuntu 19.10"
+		echo "This script currently supports Arch Linux, Ubuntu 18.04 LTS (Bionic Beaver), Ubuntu 19.10 (Disco Dingo)"
 		exit 1
 	fi
 }
@@ -1674,9 +1666,6 @@ case "$1" in
 		;;
 	-deloldbackup)
 		script_deloldbackup
-		;;
-	-deloldsavefiles)
-		script_deloldgamelogs
 		;;
 	-update)
 		script_update
