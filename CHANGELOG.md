@@ -1,3 +1,11 @@
+Update 2020-04-10
+
+- added multi-instance support
+- added -add_server argumant to add more server instances
+- added -remove_server argument to remove server instances
+
+-------------------------
+
 Update 2020-03-26
 
 - fixed config file generation during installation for email and discord notifications
