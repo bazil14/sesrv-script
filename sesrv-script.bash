@@ -1615,7 +1615,7 @@ case "$1" in
 	-help)
 		echo -e "${CYAN}Time: $(date +"%Y-%m-%d %H:%M:%S") ${NC}"
 		echo -e "${CYAN}$NAME server script by 7thCore${NC}"
-		echo "Version: $VERSION"
+		echo "Version: $VERSION Legacy"
 		echo ""
 		echo -e "${GREEN}-start ${RED}- ${GREEN}Start the server${NC}"
 		echo -e "${GREEN}-stop ${RED}- ${GREEN}Stop the server${NC}"
