@@ -31,6 +31,8 @@ This script creates a new non-sudo enabled user and installes the game in a fold
 
 - shutdown gracefully on os shutdown
 
+- can run multiple servers
+
 - script auto update from github
 
 - send email notifications after 3 crashes within a 5 minute time limit (optional)
@@ -170,9 +172,11 @@ That should be it.
 | Command | Description |
 | ------- | ----------- |
 | `-help` | Prints a list of commands and their description |
-| `-start` | Start the server |
-| `-stop` | Stop the server |
-| `-restart` | Restart the server |
+| `-add_server` | Adds a server to the active server list. |
+| `-remove_server` | Removes a server from the active server list. |
+| `-start <server number>` | Start the server. If the server number is not specified the function will start all servers |
+| `-stop <server number>` | Stop the server. If the server number is not specified the function will stop all servers |
+| `-restart <server number>` | Restart the server. If the server number is not specified the function will restart all servers |
 | `-sync` | Sync from tmpfs to hdd/ssd |
 | `-backup` | Backup files, if server running or not. |
 | `-autobackup` | Automaticly backup files when server running |
@@ -185,12 +189,12 @@ That should be it.
 | `-rebuild_services` | Reinstalls the systemd services from the script. Usefull if any service updates occoured |
 | `-rebuild_prefix` | Reinstalls the wine prefix. Usefull if any wine prefix updates occoured |
 | `-disable_services` | Disables all services. The server and the script will not start up on boot anymore |
-| `-enable_services` | Enables all services dependant on the configuration file of the script |
+| `-enable_services <server number>` | Enables all services dependant on the configuration file of the script |
 | `-reload_services` | Reloads all services, dependant on the configuration file |
 | `-update` | Update the server, if the server is running it wil save it, shut it down, update it and restart it |
 | `-update_script` | Check github for script updates and update if newer version available |
 | `-update_script_force` | Get latest script from github and install it no matter what the version |
-| `-attach` | Attaches to the tmux session of the server |
+| `-attach <server number>` | Attaches to the tmux session of the specified server |-
 | `-status` | Display status of server |
 | `-install` | Installs all the needed files for the script to run, the wine prefix, systemd services and timers and the game |
 | `-install_packages` | Installs all the needed packages (Supports only Arch linux & Ubuntu 19.10 and onward)
@@ -202,6 +206,39 @@ That should be it.
 | Issue | Resolution |
 | ----- | ---------- |
 | Ubuntu 18.04 LTS Support (Script can't enable services during installation) | This version of Ubuntu has a bug in it's systemd component, meaning the script CAN NOT enable the services required for the game to start up after boot. You will have to do this manually by rebooting the os and logging in with the username you designated at the beginning of the install procedure then execute the script with the `-enable_services` argument. |
+
+-------------------------
+
+# How to convert from legacy to the new multi-instance version:
+
+Due to a lot of rewriting of core functions the old version of the script was moved to the legacy branch. All script installations with auto updates enabled have recieved an update co continue checking for updates from the legacy branch. If you want to convert to the new multi-instance version follow this guide:
+
+- shutdown the server
+
+- execute the script with -disable_services
+
+- navigate to the folder /home/$USER/.config/systemd/user and delete the following:
+  sesrv-mkdir-tmpfs.service, sersrv-tmpfs.service, sersrv.service
+
+- delete the script from the scripts folder
+
+- download the new script version and copy it to the scripts folder
+
+- make it executable with chmod +x ./home/$USER/scripts/sersrv-script.bash
+
+- execute the script with -rebuild_services
+
+- execute the script with -reload_services
+
+- navigate to the SpaceEngineersDedicated application data and create a new folder (example: StarSystem01):
+
+- move all files (Saves, SpaceEngineers-Dedicated.cfg, Mods, content, cache, temp, appworkshop_244850.acf) to the newly created folder
+
+- execute the script with the -add_server argument and add server StarSystem01
+
+- execute the script with -enable_services StarSystem01
+
+- start the server with -start StarSystem01
 
 -------------------------
 
