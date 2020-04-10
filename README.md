@@ -234,6 +234,8 @@ Due to a lot of rewriting of core functions the old version of the script was mo
 
 - move all files (Saves, SpaceEngineers-Dedicated.cfg, Mods, content, cache, temp, appworkshop_244850.acf) to the newly created folder
 
+- make sure to edit the SpaceEngineers-Dedicated.cfg and the LastSession.sbc files to point to the right directory (you changed the paths with the new folder)
+
 - execute the script with the -add_server argument and add server StarSystem01
 
 - execute the script with -enable_services StarSystem01
