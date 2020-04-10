@@ -137,15 +137,15 @@ After the installation finishes you can log in to the newly created user and fin
 
 The easiest way to do this is to just generate them locally and copy them over to the server, this can be done by using the dedicated server tool on your windows box, the tool is located in
 
-`[Steam intall directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe`
+`[Steam install directory]\steamapps\common\SpaceEngineers\Tools\DedicatedServer\SpaceEngineersDedicated.exe`
 
 Select the Default profile, set up the world, save the config and start to generate the world. After that shutdown the server.
 
 The files will be stored in
 
-`C:\Users\<username>\AppData\Roaming\SpaceEngineersDedicated\Default`
+`C:\Users\<username>\AppData\Roaming\SpaceEngineersDedicated\Default\`
 
-Edit the `SpaceEngineers-Dedicated.cfg` and copy it with the `Saves` folder to the following directory on your Linux box (if you didn't use the default user name at the begining of the script installation procedure change space_engineers to the user you specified.
+Copy the files with the `Saves` folder to the following directory on your Linux box (if you didn't use the default user name at the begining of the script installation procedure change space_engineers to the user you specified.
 
 `/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated`
 
