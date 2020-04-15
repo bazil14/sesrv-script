@@ -145,9 +145,9 @@ The files will be stored in
 
 `C:\Users\<username>\AppData\Roaming\SpaceEngineersDedicated\Default\`
 
-Copy the files with the `Saves` folder to the following directory on your Linux box (if you didn't use the default user name at the begining of the script installation procedure change space_engineers to the user you specified.
+Copy the files with the `Saves` folder to the following directory on your Linux box (if you didn't use the default user name at the begining of the script installation procedure change space_engineers to the user you specified. The script now has multi instance support (defaut instance is 01)
 
-`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated`
+`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/01`
 
 **Essential world tweaks**
 
@@ -155,13 +155,15 @@ You'll have to change the `<LoadWorld>` tag in `SpaceEngineers-Dedicated.cfg` so
 
 If the Save folder is located in
 
-`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/Saves/Star System`
+`/home/space_engineers/server/drive_c/users/space_engineers/Application\ Data/SpaceEngineersDedicated/01/Saves/Star System`
 
 the `<LoadWorld>` tag must look like this, where `{username}` is the same as `$(whoami)`
 
-`<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\Saves\Star System</LoadWorld>` 
+`<LoadWorld>C:\Users\space_engineers\Application Data\SpaceEngineersDedicated\01\Saves\Star System</LoadWorld>` 
 
 You still need to use windows paths and backshlashes in the `SpaceEngineers-Dedicated.cfg` file.
+
+You have to edit each server instance's configuration the same way.
 
 That should be it.
 

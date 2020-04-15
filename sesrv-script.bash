@@ -2,7 +2,7 @@
 
 #Space Engineers server script by 7thCore
 #If you do not know what any of these settings are you are better off leaving them alone. One thing might brake the other if you fiddle around with it.
-export VERSION="202004101342"
+export VERSION="202004151245"
 
 #Basics
 export NAME="SeSrv" #Name of the tmux session
@@ -1613,9 +1613,6 @@ script_install() {
 	echo "zip (optional but required if using the email feature)"
 	echo ""
 	echo "If these packages aren't installed, terminate this script with CTRL+C and install them."
-	echo "The script will ask you for your steam username and password and will store it in a configuration file for automatic updates."
-	echo "In the middle of the installation process you will be asked for a steam guard code. Also make sure your steam guard"
-	echo "is set to email only (don't use the mobile app and don't use no second authentication. USE STEAM GUARD VIA EMAIL!"
 	echo ""
 	echo "The installation will enable linger for the user specified (allows user services to be ran on boot)."
 	echo "It will also enable the services needed to run the game server by your specifications."
