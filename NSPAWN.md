@@ -170,7 +170,6 @@ Timezone=symlink
 LinkJournal=try-guest
 
 [Files]
-
 Bind=/path/on/host:/path/on/container
 TemporaryFileSystem=/mnt/tmpfs:rw,size=42G,gid=985,mode=0777
 ```
