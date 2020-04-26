@@ -17,7 +17,29 @@ This guide is based on my setup but you may find it usefull.
 
 -------------------------
 
-# Prepare networking
+# Required packages:
+
+**Arch Linux:**
+
+- [arch-install-scripts](https://www.archlinux.org/packages/?name=arch-install-scripts)
+
+- [debootstrap](https://www.archlinux.org/packages/?name=debootstrap)
+
+- [ubuntu-keyring](https://www.archlinux.org/packages/?name=ubuntu-keyring)
+
+**Ubuntu**
+
+- [systemd-container](https://packages.ubuntu.com/search?keywords=systemd-container&searchon=names&suite=all&section=all)
+
+- [arch-install-scripts](https://packages.ubuntu.com/search?keywords=arch-install-scripts&searchon=names&suite=all&section=all)
+
+- [debootstrap](https://packages.ubuntu.com/search?keywords=debootstrap&searchon=names&suite=all&section=all) 
+
+-------------------------
+
+# Installation
+
+**Prepare networking**
 
 You can create a bridged network for the container or passthrough it's own seperate nic.
 
@@ -76,7 +98,7 @@ You can passthrough a second nic to the nspawn container by adding `Interface=<n
 
 -------------------------
 
-# Prepare the container
+**Prepare the container**
 
 Default systemd-nspawn container location is `/var/lib/machines/` so in this guide I'll use that. If you are using diffrent paths, you will have to symlink it to `/var/lib/machines/` after the installation with:
 
@@ -84,29 +106,9 @@ Default systemd-nspawn container location is `/var/lib/machines/` so in this gui
 
 -------------------------
 
-# Needed packages:
+**Setting up the container**
 
-**Arch Linux:**
-
-- [arch-install-scripts](https://www.archlinux.org/packages/?name=arch-install-scripts)
-
-- [debootstrap](https://www.archlinux.org/packages/?name=debootstrap)
-
-- [ubuntu-keyring](https://www.archlinux.org/packages/?name=ubuntu-keyring)
-
-**Ubuntu**
-
-- [systemd-container](https://packages.ubuntu.com/search?keywords=systemd-container&searchon=names&suite=all&section=all)
-
-- [arch-install-scripts](https://packages.ubuntu.com/search?keywords=arch-install-scripts&searchon=names&suite=all&section=all)
-
-- [debootstrap](https://packages.ubuntu.com/search?keywords=debootstrap&searchon=names&suite=all&section=all) 
-
--------------------------
-
-# Setting up the container
-
-**Arch Linux container**
+***Arch Linux container***
 
 Create a container with the following command:
 
@@ -126,7 +128,7 @@ Shutdown the container with:
 
 `sudo machinectl stop ContainerName`
 
-**Ubuntu container**
+***Ubuntu container***
 
 For a Ubuntu container you will need the [debootstrap](https://www.archlinux.org/packages/?name=debootstrap) and the [ubuntu-keyring](https://www.archlinux.org/packages/?name=ubuntu-keyring) package.
 
@@ -154,9 +156,7 @@ If the above did not work, one can start the container and use these commands in
 
 `logout`
 
--------------------------
-
-# Create the nspawn file
+**Create the nspawn file**
 
 Create a nspawn file in the following location:
 
@@ -199,9 +199,7 @@ VirtualEthernet=yes
 Bridge=nic0-bridge
 ```
 
--------------------------
-
-# Enable container on boot and start it
+**Enable container on boot and start it**
 
 First enable the `machines.target` target with `sudo systemctl enable machines.target`, then `sudo systemctl enable systemd-nspawn@ContainerName.service`, where `ContainerName` is an nspawn container in `/var/lib/machines`.
 
