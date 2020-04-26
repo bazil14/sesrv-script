@@ -3,7 +3,7 @@ Instructions for setting up systemd-nspawn containers for 7thCore's scripts
 
 -------------------------
 
-***Introduction***
+**Introduction**
 
 systemd-nspawn is like the chroot command, but it is a chroot on steroids.
 
