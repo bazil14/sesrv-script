@@ -87,6 +87,8 @@ If you are using diffrent paths, you will have to symlink it to `/var/lib/machin
 
 `sudo ln -s /path/to/desired/container/location/and/ContainerName /var/lib/machines/`
 
+-------------------------
+
 **Arhc Linux**
 
 ***Arch Linux container***
@@ -138,6 +140,8 @@ If the above did not work, one can start the container and use these commands in
 `passwd`
 
 `logout`
+
+-------------------------
 
 **Ubuntu**
 
