@@ -96,15 +96,11 @@ Bridge=nic0-bridge
 
 You can passthrough a second nic to the nspawn container by adding `Interface=<name of second nic>` under `[Network]` in the nspawn file. It will be explained later.
 
--------------------------
-
 **Prepare the container**
 
 Default systemd-nspawn container location is `/var/lib/machines/` so in this guide I'll use that. If you are using diffrent paths, you will have to symlink it to `/var/lib/machines/` after the installation with:
 
 `sudo ln -s /path/to/your/container/ContainerName /var/lib/machines/`
-
--------------------------
 
 **Setting up the container**
 
@@ -205,4 +201,4 @@ First enable the `machines.target` target with `sudo systemctl enable machines.t
 
 Now you can start the container with `sudo systemctl start systemd-nspawn@ContainerName.service`
 
-That should be it.
+That should be it. Now you can log in the container with executing `maxhinectl shell ContainerName`on the host to gain root access to the container and install the script. The container has it's own systemd instance running so you can also install and run an ssh server but follow the security guides for it like for any other linux installation.
