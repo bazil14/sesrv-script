@@ -2,7 +2,7 @@
 
 #Space Engineers server script by 7thCore
 #If you do not know what any of these settings are you are better off leaving them alone. One thing might brake the other if you fiddle around with it.
-export VERSION="202005022237"
+export VERSION="202005112008"
 
 #Basics
 export NAME="SeSrv" #Name of the tmux session
@@ -1377,7 +1377,7 @@ script_install_services() {
 		ExecStart=/usr/bin/tmux -f $SCRIPT_DIR/tmux_config/$SERVICE_NAME-%i-tmux.conf -L %u-%i-tmux.sock new-session -d -s $NAME 'env WINEARCH=$WINE_ARCH WINEDEBUG=-all WINEPREFIX=$TMPFS_DIR wineconsole --backend=curses $TMPFS_DIR/$WINE_PREFIX_GAME_DIR/$WINE_PREFIX_GAME_EXE -path "C:\x5cusers\x5c%u\x5cApplication Data\x5cSpaceEngineersDedicated\x5c%i"'
 		ExecStartPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_start_complete %i
 		ExecStop=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_initialized %i
-		ExecStop=/usr/bin/tmux -L %u-%i-tmux.sock send-keys -t $NAME.0 'quittimer 15 Server shutting down in 15 seconds!' ENTER
+		ExecStop=/usr/bin/tmux -L %u-%i-tmux.sock send-keys -t $NAME.0 C-c
 		ExecStop=/usr/bin/sleep 20
 		ExecStop=/usr/bin/rsync -av --info=progress2  $TMPFS_DIR/$WINE_PREFIX_GAME_CONFIG/%i $SRV_DIR/$WINE_PREFIX_GAME_CONFIG/%i
 		ExecStop=/usr/bin/rm /tmp/$USER-$SERVICE_NAME-%i-tmux.log
@@ -1410,7 +1410,7 @@ script_install_services() {
 		ExecStart=/usr/bin/tmux -f $SCRIPT_DIR/tmux_config/$SERVICE_NAME-%i-tmux.conf -L %u-%i-tmux.sock new-session -d -s $NAME 'env WINEARCH=$WINE_ARCH WINEDEBUG=-all WINEPREFIX=$SRV_DIR wineconsole --backend=curses $SRV_DIR/$WINE_PREFIX_GAME_DIR/$WINE_PREFIX_GAME_EXE -path "C:\x5cusers\x5c%u\x5cApplication Data\x5cSpaceEngineersDedicated\x5c%i"'
 		ExecStartPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_start_complete %i
 		ExecStop=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_initialized %i
-		ExecStop=/usr/bin/tmux -L %u-%i-tmux.sock send-keys -t $NAME.0 'quittimer 15 Server shutting down in 15 seconds!' ENTER
+		ExecStop=/usr/bin/tmux -L %u-%i-tmux.sock send-keys -t $NAME.0 C-c
 		ExecStop=/usr/bin/sleep 20
 		ExecStop=/usr/bin/rm /tmp/$USER-$SERVICE_NAME-%i-tmux.log
 		ExecStopPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_complete %i
