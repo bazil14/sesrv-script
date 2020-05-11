@@ -1,3 +1,14 @@
+Update 2020-05-11
+
+- fixed a command in the systemd service files
+
+Existing users need to stop the server with systemctl --user stop sesrv-tmpfs.service or sesrv.service
+Existing users need to update the script and execute the following paramerers to rebuild updated functions:
+
+- -rebuild_services
+
+-------------------------
+
 Update 2020-05-02
 
 - updated Ubuntu 20.04 LTS support (wine repo)
