@@ -1,3 +1,10 @@
+Update 2020-06-18
+
+- added Debian 10 (Buster) support
+- added error message if trying to install packages on non supported distro
+
+-------------------------
+
 Update 2020-05-11
 
 - fixed a command in the systemd service files
