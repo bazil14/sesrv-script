@@ -2,7 +2,7 @@
 
 #Space Engineers server script by 7thCore
 #If you do not know what any of these settings are you are better off leaving them alone. One thing might brake the other if you fiddle around with it.
-export VERSION="202007101602"
+export VERSION="202007221311"
 
 #Basics
 export NAME="SeSrv" #Name of the tmux session
@@ -1205,13 +1205,13 @@ script_install_services() {
 		ExecStartPre=$SCRIPT_DIR/$SCRIPT_NAME -server_tmux_install %i
 		ExecStartPre=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_start_initialized %i
 		ExecStartPre=/usr/bin/rsync -av --info=progress2 $SRV_DIR/$WINE_PREFIX_GAME_CONFIG/{server_%i.json,server_%i,userdb_%i,workshop_%i} $TMPFS_DIR/$WINE_PREFIX_GAME_CONFIG
-		ExecStart=/usr/bin/tmux -f /tmp/$USER-$SERVICE_NAME-%i-tmux.conf -L %u-%i-tmux.sock new-session -d -s $NAME 'env WINEARCH=$WINE_ARCH WINEDEBUG=warn+heap WINEPREFIX=$TMPFS_DIR wineconsole --backend=curses $TMPFS_DIR/$WINE_PREFIX_GAME_DIR/$WINE_PREFIX_GAME_EXE -path "C:\x5cusers\x5c%u\x5cApplication Data\x5cSpaceEngineersDedicated\x5c%i" 2> $LOG_DIR_ALL/$SERVICE_NAME-wine-%i.log'
+		ExecStart=/usr/bin/tmux -f /tmp/%u-$SERVICE_NAME-%i-tmux.conf -L %u-%i-tmux.sock new-session -d -s $NAME 'env WINEARCH=$WINE_ARCH WINEDEBUG=warn+heap WINEPREFIX=$TMPFS_DIR wineconsole --backend=curses $TMPFS_DIR/$WINE_PREFIX_GAME_DIR/$WINE_PREFIX_GAME_EXE -path "C:\x5cusers\x5c%u\x5cApplication Data\x5cSpaceEngineersDedicated\x5c%i" 2> $LOG_DIR_ALL/$SERVICE_NAME-wine-%i.log'
 		ExecStartPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_start_complete %i
 		ExecStop=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_initialized %i
 		ExecStop=/usr/bin/tmux -L %u-%i-tmux.sock send-keys -t $NAME.0 C-c
 		ExecStop=/usr/bin/sleep 20
 		ExecStop=/usr/bin/rsync -av --info=progress2  $TMPFS_DIR/$WINE_PREFIX_GAME_CONFIG/%i $SRV_DIR/$WINE_PREFIX_GAME_CONFIG/%i
-		ExecStopPost=/usr/bin/rm /tmp/$USER-$SERVICE_NAME-%i-tmux.conf
+		ExecStopPost=/usr/bin/rm /tmp/%u-$SERVICE_NAME-%i-tmux.conf
 		ExecStopPost=$SCRIPT_DIR/$SCRIPT_NAME -move_wine_log %i
 		ExecStopPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_complete %i
 		TimeoutStartSec=infinity
@@ -1239,12 +1239,12 @@ script_install_services() {
 		WorkingDirectory=$SRV_DIR/$WINE_PREFIX_GAME_DIR
 		ExecStartPre=$SCRIPT_DIR/$SCRIPT_NAME -server_tmux_install %i
 		ExecStartPre=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_start_initialized %i
-		ExecStart=/usr/bin/tmux -f /tmp/$USER-$SERVICE_NAME-%i-tmux.conf -L %u-%i-tmux.sock new-session -d -s $NAME 'env WINEARCH=$WINE_ARCH WINEDEBUG=warn+heap WINEPREFIX=$SRV_DIR wineconsole --backend=curses $SRV_DIR/$WINE_PREFIX_GAME_DIR/$WINE_PREFIX_GAME_EXE -path "C:\x5cusers\x5c%u\x5cApplication Data\x5cSpaceEngineersDedicated\x5c%i" 2> $LOG_DIR_ALL/$SERVICE_NAME-wine-%i.log'
+		ExecStart=/usr/bin/tmux -f /tmp/%u-$SERVICE_NAME-%i-tmux.conf -L %u-%i-tmux.sock new-session -d -s $NAME 'env WINEARCH=$WINE_ARCH WINEDEBUG=warn+heap WINEPREFIX=$SRV_DIR wineconsole --backend=curses $SRV_DIR/$WINE_PREFIX_GAME_DIR/$WINE_PREFIX_GAME_EXE -path "C:\x5cusers\x5c%u\x5cApplication Data\x5cSpaceEngineersDedicated\x5c%i" 2> $LOG_DIR_ALL/$SERVICE_NAME-wine-%i.log'
 		ExecStartPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_start_complete %i
 		ExecStop=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_initialized %i
 		ExecStop=/usr/bin/tmux -L %u-%i-tmux.sock send-keys -t $NAME.0 C-c
 		ExecStop=/usr/bin/sleep 20
-		ExecStopPost=/usr/bin/rm /tmp/$USER-$SERVICE_NAME-%i-tmux.conf
+		ExecStopPost=/usr/bin/rm /tmp/%u-$SERVICE_NAME-%i-tmux.conf
 		ExecStopPost=$SCRIPT_DIR/$SCRIPT_NAME -move_wine_log %i
 		ExecStopPost=$SCRIPT_DIR/$SCRIPT_NAME -send_notification_stop_complete %i
 		TimeoutStartSec=infinity
@@ -2138,6 +2138,7 @@ if [[ "-send_notification_start_initialized" != "$1" ]] && [[ "-send_notificatio
 fi
 
 if [ "$EUID" -ne "0" ] && [ -f "$SCRIPT_DIR/$SERVICE_NAME-config.conf" ]; then #Check if script executed as root, if not generate missing config fields
+	touch $SCRIPT_DIR/$SERVICE_NAME-config.conf
 	CONFIG_FIELDS="tmpfs_enable,beta_branch_enabled,beta_branch_name,email_sender,email_recipient,email_update,email_update_script,email_start,email_stop,email_crash,discord_update,discord_update_script,discord_start,discord_stop,discord_crash,script_updates,bckp_delold,log_delold,log_game_delold,update_ignore_failed_startups"
 	IFS=","
 	for CONFIG_FIELD in $CONFIG_FIELDS; do
